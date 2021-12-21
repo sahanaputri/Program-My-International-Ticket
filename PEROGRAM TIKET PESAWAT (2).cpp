@@ -1,11 +1,25 @@
 #include <iostream>
 #include <conio.h>
 #include <stdio.h>
+#include <string.h>
 using namespace std;
 int main ()
 {
-                char kode_kota,kelas,kembali;
+                char kode_kota,kelas,kembali, username[20], nama[20], password[20];
                 int harga_tiket,PPN,jum_bayar;
+  
+                cout<< "===========================================\n";
+                cout<< "Selamat Datang di My International Ticket \n";
+                cout<< "===========================================\n";
+                cout<< "Silahkan Log in Terlebih Dahulu : \n";
+                cout<< "Masukkan Username : ";
+                scanf("%s", &username);
+                cout<< "Masukkan Password : ";
+                scanf("%s", &password); 
+                printf("\n");
+            
+                if(strcmp(username, "Ripa")==0 && strcmp(password, "12345")==0);
+  
                 do
                 {
                                 printf("\n__________________ HARGA TIKET PESAWAT ___________________\n");
