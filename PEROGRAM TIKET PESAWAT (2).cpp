@@ -1,197 +1,21 @@
 #include <iostream> //header input output
 #include <conio.h> //header getch
-#include <windows.h> //header system cls
 #include <fstream> //header membuka dan menutup file
 #include <string.h> //header operasi string
 #include <string> //header fungsi string
 #include <iomanip> //header pemerataan io set flags
-#include <time.h> //Header yang di gunakan untuk operasi pada bahasa C
-time_t waktuserver;	
+#include <time.h>	//Header yang di gunakan untuk operasi pada bahasa C
+#include <stdbool.h> //header untuk  tipe data boolean
+#include <ctype.h> //header untuk mengklasifikaskan jenis karakter
+#include <stdlib.h> //header untuk operasi pembanding daan operasi konversi
+time_t waktuserver;	// untuk tampilan waktu
 using namespace std; //pengganti std::
-char namaFile[]="loginRecord.txt";
-
-struct user{
-	char nama [50];
-	char username [12];
-	char password [10];
-	char email [50];
-}u;		
-
-struct {
-	char *nama[50];
-	char *telepon[13];
-	char *alamat[70];	
-}Identitas;
-
-void waktu(){
-	time(&waktuserver);
-	struct tm*waktu = localtime (&waktuserver);
-	printf ("\n\t\t\t||==========Tanggal: %d/%d/%d=========||\n\n", waktu -> tm_mday, waktu ->tm_mon +1, waktu -> tm_year +1900);
-}
-
-void masuk(){
-	void daftar();
-	/*  Variabel username[12] digunakan untuk menyimpan input username
-        yang dilakukan oleh pengguna. Inputan tersebut akan divalidasi
-        dengan username yang sudah terdaftar pada file loginRecord.txt   */
-	char username[12];
-	
-	/*  Variabel password[10] digunakan untuk menyimpan input password
-        yang dilakukan oleh pengguna. Inputan tersebut akan divalidasi
-        dengan password yang sudah terdaftar pada file loginRecord.txt   */
-	char password[10];
-	
-	// Variabel pilihan untuk pilihan user apakah ingin mendaftar, masuk ulang, atau keluar
-	int pilihan;
-	
-	// Membuat pointer record untuk menunjuk pada file "loginRecord.txt"
-	FILE *record;
-	
-	// Membuka file dengan mode "r"
-	record = fopen (namaFile, "r");
-	if (record == NULL){
-		fputs ("Error, tidak terdapat file untuk menyimpan akun\n", stderr);
-		exit(1);
-	}
-	
-	// Instruksi untuk login
-	printf ("\t\t\t||====================||\n");
-	printf ("\t\t\t|| LOGIN\n");
-	printf ("\t\t\t||====================||\n");
-	printf ("\t\t\t|| Username: ");
-	scanf ("%s", username);
-	printf ("\t\t\t||====================||\n");
-	printf ("\t\t\t|| Password: ");
-	scanf ("%s", password);
-	printf ("\t\t\t||====================||\n");
-	
-	// Membersikan layar terminal
-	system ("cls");
-	
-	// Membeaca file "logRecord.txt"
-	while (fread(&u, sizeof(u),1,record)){
-		 /*  Mengkomparasi username serta password yang diinput user ke dalam fungsi
-            masuk() dengan username serta password yang sudah terdaftar */
-		if(strcmp(username, u.username)==0 && strcmp(password, u.password)==0){
-			printf ("\t\t\t||====================||\n");
-			printf ("\t\t\t|| 	Login Berhasil!	 ||\n");
-			printf ("\t\t\t||====================||\n");	
-		}
-		//  Jika akun tidak terdaftar maka akan diberikan pilihan untuk mendaftar, masuk ulang, atau keluar
-		else {
-			printf ("\t\t\t||============================||\n");
-			printf ("\t\t\t|| 	Akun Tidak Terdaftar!	 ||\n");
-			printf ("\t\t\t||============================||\n");
-			
-			instruksi:
-			printf ("\t\t\t||============================||\n");
-			printf ("\n\t\t\t||Ketik 1 untuk Daftar");
-			printf ("\n\t\t\t||Ketik 2 untuk Masuk Ulang");
-			printf ("\n\t\t\t||Ketik 3 untuk Keluar\n");
-			printf ("\n\t\t\t||============================||\n");
-			printf ("\n\t\t\t||Pilihan : ");
-			scanf ("%d", &pilihan);
-			system ("cls");
-			if (pilihan == 1){
-				daftar();
-			}
-			else if (pilihan == 2){
-				masuk();
-			}
-			else if (pilihan == 3){
-				exit(1);
-			}
-			else {
-				printf ("Error! Silahkan Masukkan Pilihan dengan Benar \n");
-				goto instruksi;
-			}
-		}
-	}
-	fclose (record);
-	return;
-}
-
-void daftar(){
-	// Membuat pointer regis untuk file "loginRecord.txt"
-	FILE *regis;
-	// Membuka file "loginRecord.txt" dengan mode "w"
-	regis = fopen(namaFile, "w");
-	if (regis == NULL){
-		fputs ("ERROR, Tidak terdapat file untuk menyimpan data!\n", stderr);
-	}
-	
-	//Instruksi untuk melakukan registrasi akun 
-	printf ("\n\t\t\t Silahkan Registrasi Akun Anda! \n\n");
-	getchar ();
-	printf ("\n\t\t\t Nama Lengkap: ");
-	gets (u.nama);
-	printf ("\n\t\t\t Email: ");
-	scanf ("%s", u.email);
-	printf ("\n\t\t\t Hallo %s! \n", u.nama);
-	printf ("\n\t\t\t Silahkan membuat username (max 12 karakter), serta password (max 10 karakter) \n");
-	
-	// Instruksi untuk menginput username serta password
-	printf ("\n\t\t\t Masukkan Username : ");
-	scanf ("%s", u.username);
-	printf ("\n\t\t\t Masukkan Password : ");
-	scanf ("%s", u.password);
-	
-	// Menuliskan nama yang diinput oleh pengguna kedalam file "loginRecord.txt"
-	fwrite (&u, sizeof(u),1,regis);
-	fclose (regis);
-	printf ("\n\t\t\t Registrasi Selesai! ");
-	printf ("\n\t\t\t Akun Anda Terdaftar, Silahkan Mencoba!");
-	
-	// Membersikan layar terminal
-	system("cls");
-	// Memanggil fungsi masuk()
-	masuk ();	
-}
-
-
-void pilmenu(){
-	//variabel pilihan untuk menyimpan pilihan yang diinput user pada switch case
-	int pilihan;
-	
-	instruksi:
-	printf ("\t\t\t||======================================||\n");
-	printf ("\t\t\t|| 		PILIHAN MENU MASUK	||\n");
-	printf ("\t\t\t||======================================||\n");
-	printf ("\t\t\t||	No	|	Menu Masuk	||\n");
-	printf ("\t\t\t||======================================||\n");
-	printf ("\t\t\t||	1	|	Masuk		||\n");
-	printf ("\t\t\t||	2	|	Registrasi	||\n");
-	printf ("\t\t\t||	4	|	Keluar		||\n");
-	printf ("\t\t\t||======================================||\n");
-	printf ("\t\t\t||======================================||\n");
-	printf ("\t\t\t|| Masukkan pilihan anda : ");
-	scanf ("%d", &pilihan);
-	printf ("\t\t\t||======================================||\n");
-	system ("cls");
-	
-	/* Percabangan Switch dengan kondisi nilai yang disimpan pada variabel
-       pilihan untuk menuju ke pilihan menu masuk yang diinput user  */
-	switch (pilihan){
-		case 1:
-			masuk();
-			break;
-		case 2:
-			daftar();
-			break;
-		case 3:
-			exit(1);
-			break;
-		default:
-			printf ("Error! Silahkan Masukkan Plihan dengan Benar \n");
-			break;
-	}
-}
 
 int a, b, c, d, jml, jum;
 int byr, kembalian;
-int totPem = 0;
+int totPem = 0; //Tipe dan variabel data untung menghitung pilihan tujuan
 
-struct client
+struct client //variabel untuk nama pembeli
 {
   string nama[30];
   string *org;
@@ -211,7 +35,6 @@ struct pesawat
     char pswt[10], pil[10][10], pil2[10][10];
 }t;
 
-
 void tampilanAwal () //membuat garis tabel awal tampilan
 {
     cout << "========================================================================================================================" << endl;
@@ -219,10 +42,148 @@ void tampilanAwal () //membuat garis tabel awal tampilan
     cout << "========================================================================================================================" << endl;
 }
 
-void tampilanPesawat () //tabel pesawat yang tersedia
+void waktu(){ //membuat tampilan waktu
+	time(&waktuserver);
+	struct tm*waktu = localtime (&waktuserver);
+	printf ("\t==========Tanggal: %d/%d/%d===========\n\n", waktu -> tm_mday, waktu ->tm_mon +1, waktu -> tm_year +1900);
+}
+
+void tampilanLogin() //membuat tampilan login dan registrasi
+{
+	int i, menu, tlahir, bulanL, tahunL, simpanIndex, member = 0;
+	char nama[20], namad[20], namab[20];
+	char jkelamin[5], nikkk[25], umur[50];
+	char password[25], passTemp[25], listPassword[20] [20], listUsername[20] [20];
+	bool cekSymbol, cekBesar, cekKecil, cekAngka, cekUser;
+	
+	menu:
+		cout << "\t||===================================||\n";
+		cout << "\t||SILAHKAN PILIH MENU DI BAWAH       ||\n";
+		cout << "\t||===================================||\n";
+		cout << "\t|| 1. REGISTRASI                     ||\n";
+		cout << "\t|| 2. LOGIN                          ||\n";
+		cout << "\t|| 3. KELUAR                         ||\n";
+		cout << "\t||===================================||\n";
+		cout << "\t|| SILAHKAN PILIH MENU : ";
+		scanf ("%d", &menu);
+		system ("cmd /c cls");
+		
+		switch(menu)
+		{
+			case 1:
+				cout << "\t||===================================||\n";
+				cout << "\t||SILAHKAN REGISTRASI                ||\n";
+				cout << "\t||===================================||\n";
+				cout << "\t||NIK\t\t:";
+				scanf("%s", nikkk);
+				cout << "\t||NAMA DEPAN\t:";
+				scanf("%s", namad);
+				cout << "\t||NAMA BELAKANG\t:";
+				scanf("%s", namab);
+				cout << "\t||TANGGAL LAHIR\t:";
+				scanf("%s", &tlahir);
+				cout << "\t||BULAN LAHIR\t:";
+				scanf("%s", &bulanL);
+				cout << "\t||TAHUN LAHIR\t:";
+				scanf("%s", &tahunL);
+				cout << "\t||UMUR ANDA\t:";
+				scanf("%s", umur);
+				cout << "\t||JENIS KELAMIN\t:";
+				scanf("%s", jkelamin);
+				system ("CLS");
+				
+				cout << "\t\t\t\t\t\t|==================================|\n";
+				cout << "\t\t\t\t\t\t| SELAMAT DATA DAN BERHASIL DI BUAT|\n";
+				cout << "\t\t\t\t\t\t|==================================|\n";
+				cout << "\t\t\t\t\t\t|Nama Anda : ";
+				scanf("%s", nama);
+				while (8 > 7)
+				{
+					printf("\t\t\t\t\t\t|Buat Password :");
+					scanf("%s", password);
+					if(strlen(password) > 8){
+						cekAngka = false;
+						cekBesar = false;
+						cekKecil = false;
+						cekSymbol = false;
+						
+						for (i = 0; i < strlen(password); i++){
+							if (password[i] >=48 && password[i] <= 57) {
+								cekAngka = true;
+							}else if(password[i] >= 65 && password[i] <= 90){
+								cekBesar = true;
+							}else if(password[i] >= 97 && password[i] <= 123){
+								cekKecil = true;
+							}else{
+								cekSymbol = true;
+							}
+						}
+						if(cekAngka == true && cekBesar == true && cekKecil == true && cekSymbol == true){
+							
+						}else
+						{
+							cout <<"\t\t\t\t\tPassword harus mengandung angka besar & kecil, huruf, dan symbol\n";
+							continue;
+						}
+						strcpy(passTemp, password);
+						if(password == strrev(passTemp)){
+							cout << "\t\t\t\t\t\t|PASSWORD ANDA PALINDROME\n";
+							continue;
+						}
+						break;
+					}else
+					{
+						cout << "\t\t\t\t\t\t|Password anda kurang dari 8 digit!";
+						continue;
+					}
+				}
+				strcpy (listUsername[member], nama);
+				strcpy (listPassword[member], password);
+				cout << "\t\t\t\t\t\t ***** Akun anda berhasil di buat *****\n";
+				system ("CLS");
+				goto menu;
+				break;
+			case 2:
+				while(0<1)
+				{
+				
+				cout << "\t*Silahkan Login Akun*\n";
+				cout << "\tUsername :";
+				scanf("%s", nama);
+				
+				cekUser = false;
+				
+				for(i = 0; listUsername[i] [1] != '\0'; i++){
+					
+					if(strcmp(listUsername[i], nama) == 0){
+						simpanIndex = i;
+						cekUser = true;
+					}
+				}
+				if (cekUser == false){
+					cout << "\tNama anda tidak ada\n";
+					continue;
+				}
+				cout<< "\tMasukkan Password : ";
+				scanf("%s", password);
+				if((password) == 0){
+					continue;
+				}else{
+				cout<<"\t Anda Berhasil Login";
+				break;
+				}
+				}
+			case 3:	
+				cout<<"\t\t =====Terima Kasih=====\n";			
+		}
+}
+
+void tampilanPesawat () //tabel untuk memilih jenis pesawat yang tersedia
 {
     cout << endl;
     cout<<endl;
+    cout<<"\n\t\t*--------------------------------------------------------------*";
+    cout<<"\n\t\t|            	   SILAHKAN PILIH JENIS PESAWAT                 |";
  	cout<<"\n\t\t*--------------------*--------------------*--------------------*";
   	cout<<"\n\t\t| Nama Pesawat       | Jam Berangkat      | Harga Tiket        |";
   	cout<<"\n\t\t|--------------------|--------------------|--------------------|";
@@ -431,7 +392,7 @@ void dataTiket () // pemasukan data pilihan tujuan penerbangan
         }
 }
 
-int hargaTiket () //harga tiket
+int hargaTiket () //untuk harga tiket
 {
     if (t.pswt[a] == '1')
     {
@@ -480,7 +441,7 @@ int hargaTiket () //harga tiket
     return t.tiket[a];
 }
 
-float diskon()
+float diskon() //untuk menghitung harga diskon
 {
     if (hargaTiket() > 15000000)
     {
@@ -501,7 +462,7 @@ float diskon()
     return t.diskon[a];
 }
 
-int hTiket() //rumus total harga tiket
+int hTiket() //rumus untuk menghitung total harga tiket
 {
     totPem = hargaTiket() - diskon();
     return totPem;
@@ -544,25 +505,25 @@ void printTabel () //print hasil proses
                     totPem = totPem + hTiket();
                     cout << setiosflags(ios::left) << setw(31) << Tujuan() << setiosflags(ios::left) << setw(13) << kode();
                     file << setiosflags(ios::left) << setw(31) << Tujuan() << setiosflags(ios::left) << setw(13) << kode();
-                    cout << setiosflags(ios::left) << setw(20) << tipe() << setiosflags(ios::left) << setw(16) << "Rp. " << hTiket() << ",-" << setiosflags(ios::left) << setw(11) << "|" << endl;
-                    file << setiosflags(ios::left) << setw(20) << tipe() << setiosflags(ios::left) << setw(16) << "Rp. " << hTiket() << ",-" << setiosflags(ios::left) << setw(11) << "|" << endl;
+                    cout << setiosflags(ios::left) << setw(20) << tipe() << setiosflags(ios::left) << setw(16) << "Rp. " << hTiket() << setiosflags(ios::left) << setw(11) << "|" << endl;
+                    file << setiosflags(ios::left) << setw(20) << tipe() << setiosflags(ios::left) << setw(16) << "Rp. " << hTiket() << setiosflags(ios::left) << setw(11) << "|" << endl;
                 }
                 cout << "================================================================================================================================" << endl;
                 file << "================================================================================================================================" << endl;
-                cout << setiosflags(ios::right) << setw(102) << "Total" << setiosflags(ios::left) << setw(6) << "Rp. " << totPem << ",-" << endl;
-                file << setiosflags(ios::right) << setw(102) << "Total" << setiosflags(ios::left) << setw(6) << "Rp. " << totPem << ",-" << endl;
+                cout << setiosflags(ios::right) << setw(102) << "Total" << setiosflags(ios::left) << setw(6) << "Rp. " << totPem << endl;
+                file << setiosflags(ios::right) << setw(102) << "Total" << setiosflags(ios::left) << setw(6) << "Rp. " << totPem << endl;
                 cout << setiosflags(ios::right) << setw(102) << "Bayar" << setiosflags(ios::left) << setw(6) << "Rp. "; cin >> byr;
-                file << setiosflags(ios::right) << setw(102) << "Bayar" << setiosflags(ios::left) << setw(6) << "Rp. " << byr << ",-" << endl;
+                file << setiosflags(ios::right) << setw(102) << "Bayar" << setiosflags(ios::left) << setw(6) << "Rp. " << byr << endl;
                 kembalian = byr - totPem;
-                cout << setiosflags(ios::right) << setw(102) << "Kembalian" << setiosflags(ios::left) << setw(6) << "Rp. " << kembalian << ",-" << endl;
-                file << setiosflags(ios::right) << setw(102) << "Kembalian" << setiosflags(ios::left) << setw(6) << "Rp. " << kembalian << ",-" << endl;
+                cout << setiosflags(ios::right) << setw(102) << "Kembalian" << setiosflags(ios::left) << setw(6) << "Rp. " << kembalian << endl;
+                file << setiosflags(ios::right) << setw(102) << "Kembalian" << setiosflags(ios::left) << setw(6) << "Rp. " << kembalian << endl;
             }
             file.close();
             cout << endl << "   Rekap data sudah ditulis dan dikirim ke pusat. Terima kasih telah memakai jasa kami" << endl;
     }
 }
 
-void printTiket ()
+void printTiket () //print hasil akhir tiket
 {
     ofstream file ("Tiket.txt");
     cout << endl;
@@ -605,10 +566,13 @@ void printTiket ()
     }
 }
 
-main ()
+int main () //tampilan utama program
 {
     system("cls");
+    //memanggil fungsi void
     tampilanAwal();
+    waktu();
+    tampilanLogin();
     tampilanPesawat();
     cout << endl;
     cout << "   Jumlah Client : "; cin >> jml; //untuk perulangan jumlah client yang membeli tiket pesawat
